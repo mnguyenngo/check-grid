@@ -15,12 +15,12 @@ class Agenda(object):
         self._created_at = dt.datetime.utcnow()
         self._agenda = []
 
-    def __repr__(self):
-        return self._agenda
+    def show_agenda(self):
+        return [task.text for task in self._agenda]
 
     def add_task(self, task):
         """Add new task object to agenda"""
-        self.agenda.append(task)
+        self._agenda.append(task)
 
     def plot_agenda_2d(self):
         """Returns 2d plot of data with respect to its first and second
@@ -29,7 +29,7 @@ class Agenda(object):
         # Load spaCy nlp model
         nlp = spacy.load('en')
         # Get the vector for each task
-        vectorlist = [nlp(task.text).vector for task in self.agenda]
+        vectorlist = [nlp(task.text).vector for task in self._agenda]
         # Stack the vectors to create a matrix
         X = np.stack(vectorlist)
         # Run the PCA on the matrix
@@ -43,6 +43,6 @@ class Agenda(object):
         y = pcd_points[:, 1]
         ax.scatter(x, y)
         # Label each point with the task item
-        for i, task in enumerate(self.agenda):
+        for i, task in enumerate(self._agenda):
             ax.annotate(task.text, (x[i], y[i]))
         plt.show()
